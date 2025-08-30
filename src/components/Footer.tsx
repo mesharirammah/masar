@@ -99,11 +99,11 @@ const Footer = () => {
                    خدماتنا
                  </Link>
                </li>
-               <li>
-                 <Link to="/portfolio" className="text-gray-300 hover:text-primary-600 transition-all duration-300 text-sm font-medium hover:translate-x-2 transform inline-block">
-                   أعمالنا
-                 </Link>
-               </li>
+                             <li>
+                <Link to="/our-work" className="text-gray-300 hover:text-primary-600 transition-all duration-300 text-sm font-medium hover:translate-x-2 transform inline-block">
+                  أعمالنا
+                </Link>
+              </li>
                <li>
                  <Link to="/about-us" className="text-gray-300 hover:text-primary-600 transition-all duration-300 text-sm font-medium hover:translate-x-2 transform inline-block">
                    من نحن
@@ -124,24 +124,24 @@ const Footer = () => {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-gray-300 hover:text-primary-600 transition-all duration-300 text-sm font-medium hover:translate-x-2 transform inline-block">
+                <Link to="/services" className="text-gray-300 hover:text-primary-600 transition-all duration-300 text-sm font-medium hover:translate-x-2 transform inline-block">
                   الأتمتة الذكية
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-primary-600 transition-all duration-300 text-sm font-medium hover:translate-x-2 transform inline-block">
+                <Link to="/services" className="text-gray-300 hover:text-primary-600 transition-all duration-300 text-sm font-medium hover:translate-x-2 transform inline-block">
                   الذكاء الاصطناعي
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-primary-600 transition-all duration-300 text-sm font-medium hover:translate-x-2 transform inline-block">
+                <Link to="/services" className="text-gray-300 hover:text-primary-600 transition-all duration-300 text-sm font-medium hover:translate-x-2 transform inline-block">
                   المسار الرقمي المتكامل
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-primary-600 transition-all duration-300 text-sm font-medium hover:translate-x-2 transform inline-block">
+                <Link to="/services" className="text-gray-300 hover:text-primary-600 transition-all duration-300 text-sm font-medium hover:translate-x-2 transform inline-block">
                   حلول مخصصة
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
