@@ -20,12 +20,8 @@ export interface SavedContactFormData extends ContactFormData {
 
 export class WebhookService {
   private static readonly WEBHOOK_ENDPOINTS = [
-    // خدمة موثوقة تعمل بشكل مؤكد (للاختبار)
-    'https://httpbin.org/post',
-    // خدمة احتياطية ثانية
-    'https://jsonplaceholder.typicode.com/posts',
-    // رابط الويب هوك الأصلي (قد يحتاج تحديث)
-    'https://cloud.activepieces.com/api/v1/webhooks/2GjCUtFPEUQL5OnqD7gqR'
+    // رابط الويب هوك الرئيسي لـ Activepieces
+    'https://cloud.activepieces.com/api/v1/webhooks/O4RKo8kmQwsTORFYUZzm9'
   ];
 
   static async sendContactForm(data: ContactFormData): Promise<{success: boolean, message: string, data?: any}> {
@@ -118,8 +114,6 @@ export class WebhookService {
   }
 
   private static getEndpointName(endpoint: string): string {
-    if (endpoint.includes('httpbin.org')) return 'نظام الاختبار المؤقت';
-    if (endpoint.includes('jsonplaceholder')) return 'النظام الاحتياطي';
     if (endpoint.includes('activepieces')) return 'نظام Activepieces';
     return 'النظام';
   }

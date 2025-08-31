@@ -65,7 +65,7 @@ const ContactPage = () => {
         // نجح الإرسال
         console.log('✅ تم إرسال النموذج بنجاح إلى Activepieces');
         setSubmitStatus('success');
-        setSubmitMessage(`شكرًا لك ${formData.fullName}! تم إرسال رسالتك بنجاح إلى نظام MasarFlow وسنتواصل معك قريباً على ${formData.email}`);
+        setSubmitMessage('شكرًا لك، تم استلام رسالتك بنجاح.');
         
         // مسح بيانات النموذج
         setFormData({
