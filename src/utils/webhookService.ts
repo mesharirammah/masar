@@ -20,8 +20,8 @@ export interface SavedContactFormData extends ContactFormData {
 
 export class WebhookService {
   private static readonly WEBHOOK_ENDPOINTS = [
-    // رابط الويب هوك الرئيسي لـ Activepieces
-    'https://cloud.activepieces.com/api/v1/webhooks/O4RKo8kmQwsTORFYUZzm9'
+    // رابط الويب هوك عبر Netlify proxy
+    '/api/contact'
   ];
 
   static async sendContactForm(data: ContactFormData): Promise<{success: boolean, message: string, data?: any}> {
@@ -115,6 +115,7 @@ export class WebhookService {
   }
 
   private static getEndpointName(endpoint: string): string {
+    if (endpoint.includes('/api/contact')) return 'نظام Activepieces عبر Netlify';
     if (endpoint.includes('activepieces')) return 'نظام Activepieces';
     return 'النظام';
   }

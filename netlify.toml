@@ -2,6 +2,12 @@
   publish = "build"
 
 [[redirects]]
+  from = "/api/contact"
+  to = "https://cloud.activepieces.com/api/v1/webhooks/O4RKo8kmQwsTORFYUZzm9"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
