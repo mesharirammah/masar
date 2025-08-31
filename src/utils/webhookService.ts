@@ -26,6 +26,7 @@ export class WebhookService {
 
   static async sendContactForm(data: ContactFormData): Promise<{success: boolean, message: string, data?: any}> {
     console.log('📤 بدء إرسال البيانات:', data);
+    console.log('🔗 الروابط المتاحة:', this.WEBHOOK_ENDPOINTS);
 
     // محاولة الإرسال إلى الخدمات المختلفة
     let lastError: any = null;
@@ -105,11 +106,11 @@ export class WebhookService {
     };
     this.saveDataLocally(failedData);
     
-    // لكن نعتبر العملية ناجحة لأننا حفظنا البيانات
+    // إرجاع فشل العملية
     return {
-      success: true,
-      message: 'تم حفظ رسالتك بنجاح! سنتواصل معك قريباً.',
-      data: { saved: true, localBackup: true }
+      success: false,
+      message: 'حدث خطأ في الإرسال. يرجى المحاولة مرة أخرى.',
+      data: { saved: true, localBackup: true, error: lastError }
     };
   }
 

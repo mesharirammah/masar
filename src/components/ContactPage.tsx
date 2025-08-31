@@ -56,10 +56,12 @@ const ContactPage = () => {
     };
 
     console.log('📤 إرسال البيانات إلى الويب هوك:', webhookData);
+    console.log('🔄 استدعاء WebhookService.sendContactForm...');
 
     try {
       // استخدام الخدمة الجديدة لإرسال البيانات
       const result = await WebhookService.sendContactForm(webhookData);
+      console.log('📡 نتيجة الإرسال:', result);
       
       if (result.success) {
         // نجح الإرسال
