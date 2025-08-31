@@ -41,11 +41,10 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo - في اليسار مع زيادة الحجم 40% - متجاوب للهواتف */}
           <div className="flex items-center">
-            <div className="w-32 h-32 md:w-44 md:h-44 flex items-center justify-center">
+            <div className="header-logo-container">
               <img
                 src="/images/masarflowloogo.png"
                 alt="MasarFlow Logo"
-                className="w-full h-full object-contain"
               />
             </div>
           </div>

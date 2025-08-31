@@ -47,6 +47,29 @@ body {
   direction: rtl;
 }
 
+/* Fix FOUC for Header Logo - Applied immediately without Tailwind delay */
+.header-logo-container {
+  width: 8rem !important; /* w-32 = 128px = 8rem */
+  height: 8rem !important; /* h-32 = 128px = 8rem */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Responsive logo size for medium screens and up */
+@media (min-width: 768px) {
+  .header-logo-container {
+    width: 11rem !important; /* w-44 = 176px = 11rem */
+    height: 11rem !important; /* h-44 = 176px = 11rem */
+  }
+}
+
+.header-logo-container img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
 /* Custom Tailwind components */
 @layer components {
   .btn-primary {
