@@ -49,7 +49,8 @@ export class WebhookService {
           mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'User-Agent': 'MasarFlow-ContactForm/1.0'
           },
           body: JSON.stringify(requestData),
         });

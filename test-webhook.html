@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار نموذج التواصل - MasarFlow</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 40px;
+            background: #f5f5f5;
+            direction: rtl;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 100px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+        }
+        .success {
+            background: #d1fae5 !important;
+            border-color: #059669 !important;
+            color: #065f46;
+        }
+        .error {
+            background: #fee2e2 !important;
+            border-color: #dc2626 !important;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 اختبار نموذج التواصل</h1>
+        <p><strong>الغرض:</strong> التحقق من أن نموذج التواصل يرسل البيانات إلى Activepieces بشكل صحيح</p>
+        
+        <button onclick="testWebhook()">📤 اختبار إرسال البيانات</button>
+        <button onclick="clearResult()">🧹 مسح النتائج</button>
+        
+        <div id="result">
+            <p><em>انقر على "اختبار إرسال البيانات" لبدء الاختبار...</em></p>
+        </div>
+    </div>
+
+    <script>
+        async function testWebhook() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>🔄 جاري إرسال بيانات الاختبار...</p>';
+            resultDiv.className = '';
+
+            const testData = {
+                fullName: 'اختبار MasarFlow',
+                email: 'test@masarflow.com',
+                phone: '+966501234567',
+                company: 'شركة الاختبار',
+                service: 'smart-automation',
+                message: 'هذه رسالة اختبار للتأكد من عمل نموذج التواصل بشكل صحيح.',
+                timestamp: new Date().toISOString(),
+                source: 'test-form',
+                isTest: true
+            };
+
+            try {
+                console.log('📤 إرسال بيانات الاختبار:', testData);
+                
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'User-Agent': 'MasarFlow-TestForm/1.0'
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                console.log('📡 استجابة الخادم:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    ok: response.ok
+                });
+
+                if (response.ok) {
+                    let responseData;
+                    try {
+                        responseData = await response.json();
+                    } catch (e) {
+                        responseData = { message: 'تم الإرسال بنجاح' };
+                    }
+
+                    resultDiv.innerHTML = `
+                        <h3>✅ نجح الاختبار!</h3>
+                        <p><strong>الحالة:</strong> ${response.status} ${response.statusText}</p>
+                        <p><strong>الوقت:</strong> ${new Date().toLocaleString('ar-SA')}</p>
+                        <p><strong>المسار:</strong> /api/contact → Activepieces</p>
+                        <p><strong>استجابة الخادم:</strong></p>
+                        <pre>${JSON.stringify(responseData, null, 2)}</pre>
+                    `;
+                    resultDiv.className = 'success';
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('❌ خطأ في الاختبار:', error);
+                resultDiv.innerHTML = `
+                    <h3>❌ فشل الاختبار</h3>
+                    <p><strong>الخطأ:</strong> ${error.message}</p>
+                    <p><strong>الوقت:</strong> ${new Date().toLocaleString('ar-SA')}</p>
+                    <p><strong>تفاصيل إضافية:</strong></p>
+                    <pre>${error.toString()}</pre>
+                `;
+                resultDiv.className = 'error';
+            }
+        }
+
+        function clearResult() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p><em>تم مسح النتائج. انقر على "اختبار إرسال البيانات" لبدء اختبار جديد...</em></p>';
+            resultDiv.className = '';
+        }
+
+        // إظهار معلومات التكوين عند تحميل الصفحة
+        window.addEventListener('load', function() {
+            console.log('🔧 تكوين الاختبار:');
+            console.log('- المسار المحلي: /api/contact');
+            console.log('- الوجهة النهائية: https://cloud.activepieces.com/api/v1/webhooks/O4RKo8kmQwsTORFYUZzm9');
+            console.log('- نوع إعادة التوجيه: Netlify Proxy (200)');
+        });
+    </script>
+</body>
+</html>
