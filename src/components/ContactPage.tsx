@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import SEOHead from './SEOHead';
 import { Send } from 'lucide-react';
-import { WebhookService, ContactFormData } from '../utils/webhookService';
+
+// نوع البيانات للنموذج
+interface ContactFormData {
+  fullName: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  service: string;
+  message: string;
+  timestamp: string;
+  source: string;
+}
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -55,19 +66,42 @@ const ContactPage = () => {
       source: 'contact-form'
     };
 
-    console.log('📤 إرسال البيانات إلى الويب هوك:', webhookData);
-    console.log('🔄 استدعاء WebhookService.sendContactForm...');
+    console.log('📤 إرسال البيانات إلى نموذج التواصل:', webhookData);
 
     try {
-      // استخدام الخدمة الجديدة لإرسال البيانات
-      const result = await WebhookService.sendContactForm(webhookData);
-      console.log('📡 نتيجة الإرسال:', result);
+      // إرسال مباشر إلى المسار المحلي /api/contact
+      console.log('📤 إرسال مباشر إلى /api/contact:', webhookData);
       
-      if (result.success) {
-        // نجح الإرسال
-        console.log('✅ تم إرسال النموذج بنجاح إلى Activepieces');
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'User-Agent': 'MasarFlow-ContactForm/1.0'
+        },
+        body: JSON.stringify(webhookData)
+      });
+
+      console.log('📡 استجابة الخادم:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        url: response.url
+      });
+
+      if (response.ok) {
+        let responseData;
+        try {
+          responseData = await response.json();
+        } catch (e) {
+          responseData = { message: 'تم الإرسال بنجاح' };
+        }
+        
+        console.log('✅ تم إرسال النموذج بنجاح إلى Activepieces عبر Netlify Proxy');
+        console.log('📄 بيانات الاستجابة:', responseData);
+        
         setSubmitStatus('success');
-        setSubmitMessage('شكرًا لك، تم استلام رسالتك بنجاح.');
+        setSubmitMessage('شكرًا لك، تم استلام رسالتك بنجاح وإرسالها إلى فريق MasarFlow.');
         
         // مسح بيانات النموذج
         setFormData({
@@ -85,10 +119,16 @@ const ContactPage = () => {
           setSubmitMessage('');
         }, 7000);
       } else {
-        // فشل الإرسال لكن تم حفظ البيانات محلياً
-        console.warn('⚠️ فشل إرسال النموذج لكن تم حفظ البيانات');
+        // فشل الإرسال
+        const errorText = await response.text();
+        console.error('❌ فشل إرسال النموذج:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorText: errorText
+        });
+        
         setSubmitStatus('error');
-        setSubmitMessage('حدث خطأ في الإرسال، لكن تم حفظ بياناتك. سنتواصل معك قريباً.');
+        setSubmitMessage(`حدث خطأ في الإرسال (${response.status}). يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.`);
         
         // إخفاء رسالة الخطأ بعد 8 ثوانِ
         setTimeout(() => {
@@ -99,7 +139,7 @@ const ContactPage = () => {
     } catch (error) {
       console.error('❌ خطأ في إرسال النموذج:', error);
       setSubmitStatus('error');
-      setSubmitMessage('حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.');
+      setSubmitMessage('حدث خطأ في الاتصال. يرجى التحقق من الإنترنت والمحاولة مرة أخرى.');
       
       // إخفاء رسالة الخطأ بعد 8 ثوانِ
       setTimeout(() => {
