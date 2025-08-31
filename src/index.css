@@ -4,6 +4,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom CSS for Header Logo - FOUC Prevention */
+.header-logo-container {
+  width: 8rem !important; /* 128px - w-32 */
+  height: 8rem !important; /* 128px - h-32 */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+.header-logo-container img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+/* Desktop sizes for header logo */
+@media (min-width: 768px) {
+  .header-logo-container {
+    width: 11rem !important; /* 176px - md:w-44 */
+    height: 11rem !important; /* 176px - md:h-44 */
+  }
+}
+
 /* Custom CSS for Footer Logo */
 .footer-logo-container {
   padding: 0 !important;
@@ -45,29 +70,6 @@ html {
 body {
   font-family: 'Cairo', 'Tajawal', sans-serif;
   direction: rtl;
-}
-
-/* Fix FOUC for Header Logo - Applied immediately without Tailwind delay */
-.header-logo-container {
-  width: 8rem !important; /* w-32 = 128px = 8rem */
-  height: 8rem !important; /* h-32 = 128px = 8rem */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* Responsive logo size for medium screens and up */
-@media (min-width: 768px) {
-  .header-logo-container {
-    width: 11rem !important; /* w-44 = 176px = 11rem */
-    height: 11rem !important; /* h-44 = 176px = 11rem */
-  }
-}
-
-.header-logo-container img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;
 }
 
 /* Custom Tailwind components */

@@ -45,6 +45,7 @@ const Header: React.FC = () => {
               <img
                 src="/images/masarflowloogo.png"
                 alt="MasarFlow Logo"
+                loading="eager"
               />
             </div>
           </div>
