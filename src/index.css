@@ -39,17 +39,25 @@
   }
 }
 
-/* Force header height consistency */
+/* Force header height consistency and white background */
 header {
   height: auto !important;
   min-height: 3rem !important; /* 48px */
   max-height: 3.5rem !important; /* 56px */
+  background-color: #FFFFFF !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 @media (min-width: 768px) {
   header {
     min-height: 3.5rem !important; /* 56px */
     max-height: 4rem !important; /* 64px */
+    background-color: #FFFFFF !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 }
 
@@ -87,97 +95,116 @@ header svg {
   max-height: 1.5rem !important;
 }
 
-/* Prevent any layout shifts */
+/* إجبار لون أيقونة الواتساب في الهيدر لتكون خضراء */
+header .hidden.lg\\:flex svg {
+  fill: #25D366 !important;
+}
+
+header .hidden.lg\\:flex svg path {
+  fill: #25D366 !important;
+}
+
+/* Prevent any layout shifts and ensure white background */
 header * {
   box-sizing: border-box !important;
 }
 
-/* Mobile menu improvements */
+/* Force white background on all header elements */
+header,
+header > div,
+header > div > div {
+  background-color: #FFFFFF !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* القائمة الجانبية الجديدة للموبايل */
 @media (max-width: 1023px) {
-  /* Mobile menu navigation */
-  header nav {
+  /* تحسينات للقائمة الجانبية */
+  .mobile-sidebar {
     background-color: #FFFFFF !important;
-    background-image: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1) !important;
   }
   
-  /* Ensure all mobile menu containers are solid white */
-  header .lg\\:hidden.fixed nav {
-    background-color: #FFFFFF !important;
+  /* تحسين الانتقالات */
+  .mobile-sidebar-transition {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
   
-  header .lg\\:hidden.fixed nav > div {
-    background-color: #FFFFFF !important;
+  /* تحسين الخلفية المعتمة */
+  .mobile-backdrop {
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
   }
   
-  /* Full screen mobile menu */
-  header .lg\\:hidden.fixed {
-    width: 100vw !important;
-    height: 100vh !important;
-    top: 3rem !important; /* 48px - matches header height */
+  /* تحسين روابط التنقل */
+  .mobile-nav-link {
+    position: relative !important;
+    overflow: hidden !important;
+  }
+  
+  .mobile-nav-link::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
     right: 0 !important;
-    left: 0 !important;
-    bottom: 0 !important;
-    background-color: #FFFFFF !important;
-    background-image: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    z-index: 40 !important;
-    opacity: 1 !important;
+    width: 0 !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(7, 20, 234, 0.1), transparent) !important;
+    transition: width 0.3s ease !important;
   }
   
-  /* Force white background on all mobile menu elements */
-  header .lg\\:hidden.fixed * {
-    background-color: transparent !important;
+  .mobile-nav-link:hover::before {
+    width: 100% !important;
   }
   
-  header .lg\\:hidden.fixed > div {
-    background-color: #FFFFFF !important;
+  /* تحسين زر الهمبرغر */
+  .hamburger-button {
+    transition: all 0.2s ease !important;
   }
   
-  header nav a {
-    color: #1f2937 !important; /* gray-800 */
-    font-weight: 600 !important;
-    font-size: 1.25rem !important; /* text-xl */
-    padding: 1rem 1.5rem !important;
-    border-radius: 0.5rem !important; /* rounded-lg */
+  .hamburger-button:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    transform: scale(1.05) !important;
+  }
+  
+  .hamburger-button:active {
+    transform: scale(0.95) !important;
+  }
+  
+  /* تحسين زر الإغلاق */
+  .close-button {
+    transition: all 0.2s ease !important;
+  }
+  
+  .close-button:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    transform: rotate(90deg) !important;
+  }
+  
+  /* تحسين زر الواتساب */
+  .whatsapp-button {
     transition: all 0.3s ease !important;
-    border-bottom: 1px solid #e5e7eb !important; /* gray-200 */
-    text-align: right !important;
-    width: 100% !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
   }
   
-  header nav a:hover {
-    background-color: #f9fafb !important; /* gray-50 */
-    color: #0714ea !important; /* primary color */
+  .whatsapp-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
   }
   
-  header nav a:last-child {
-    border-bottom: none !important;
+  .whatsapp-button:active {
+    transform: translateY(0) !important;
   }
   
-  /* WhatsApp button styling */
-  header button[onclick*="handleWhatsAppClick"] {
-    background: #10b981 !important; /* green-500 */
-    color: white !important;
-    width: 100% !important;
+  /* إجبار لون أيقونة الواتساب لتكون بيضاء في القائمة الجانبية */
+  .whatsapp-button svg {
+    fill: #FFFFFF !important;
   }
   
-  header button[onclick*="handleWhatsAppClick"]:hover {
-    background: #059669 !important; /* green-600 */
-  }
-  
-  /* Force solid white background for mobile menu */
-  header .lg\\:hidden.fixed {
-    background-color: #FFFFFF !important;
-    background-image: none !important;
-    backdrop-filter: none !important;
-  }
-  
-  /* Ensure all child elements have proper backgrounds */
-  header .lg\\:hidden.fixed nav {
-    background-color: #FFFFFF !important;
+  .whatsapp-button svg path {
+    fill: #FFFFFF !important;
   }
 }
 
