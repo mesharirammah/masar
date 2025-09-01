@@ -6,12 +6,16 @@
 
 /* Custom CSS for Header Logo - FOUC Prevention */
 .header-logo-container {
-  width: 8rem !important; /* 128px - w-32 */
-  height: 8rem !important; /* 128px - h-32 */
+  width: 6rem !important; /* 96px - w-24 */
+  height: 6rem !important; /* 96px - h-24 */
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
+  max-width: 6rem !important;
+  max-height: 6rem !important;
+  min-width: 6rem !important;
+  min-height: 6rem !important;
 }
 
 .header-logo-container img {
@@ -19,13 +23,161 @@
   height: 100% !important;
   object-fit: contain !important;
   display: block !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 
 /* Desktop sizes for header logo */
 @media (min-width: 768px) {
   .header-logo-container {
-    width: 11rem !important; /* 176px - md:w-44 */
-    height: 11rem !important; /* 176px - md:h-44 */
+    width: 8rem !important; /* 128px - md:w-32 */
+    height: 8rem !important; /* 128px - md:h-32 */
+    max-width: 8rem !important;
+    max-height: 8rem !important;
+    min-width: 8rem !important;
+    min-height: 8rem !important;
+  }
+}
+
+/* Force header height consistency */
+header {
+  height: auto !important;
+  min-height: 3rem !important; /* 48px */
+  max-height: 3.5rem !important; /* 56px */
+}
+
+@media (min-width: 768px) {
+  header {
+    min-height: 3.5rem !important; /* 56px */
+    max-height: 4rem !important; /* 64px */
+  }
+}
+
+/* Ensure header container maintains consistent height */
+header > div > div {
+  height: 3rem !important; /* 48px */
+  min-height: 3rem !important;
+  max-height: 3rem !important;
+}
+
+@media (min-width: 768px) {
+  header > div > div {
+    height: 3.5rem !important; /* 56px */
+    min-height: 3.5rem !important;
+    max-height: 3.5rem !important;
+  }
+}
+
+/* Force consistent text sizes in header */
+header nav a {
+  font-size: 1rem !important; /* 16px */
+  line-height: 1.5 !important;
+}
+
+header button span {
+  font-size: 1rem !important; /* 16px */
+  line-height: 1.5 !important;
+}
+
+/* Force consistent icon sizes in header */
+header svg {
+  width: 1.5rem !important; /* 24px */
+  height: 1.5rem !important; /* 24px */
+  max-width: 1.5rem !important;
+  max-height: 1.5rem !important;
+}
+
+/* Prevent any layout shifts */
+header * {
+  box-sizing: border-box !important;
+}
+
+/* Mobile menu improvements */
+@media (max-width: 1023px) {
+  /* Mobile menu navigation */
+  header nav {
+    background-color: #FFFFFF !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  
+  /* Ensure all mobile menu containers are solid white */
+  header .lg\\:hidden.fixed nav {
+    background-color: #FFFFFF !important;
+  }
+  
+  header .lg\\:hidden.fixed nav > div {
+    background-color: #FFFFFF !important;
+  }
+  
+  /* Full screen mobile menu */
+  header .lg\\:hidden.fixed {
+    width: 100vw !important;
+    height: 100vh !important;
+    top: 3rem !important; /* 48px - matches header height */
+    right: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    background-color: #FFFFFF !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    z-index: 40 !important;
+    opacity: 1 !important;
+  }
+  
+  /* Force white background on all mobile menu elements */
+  header .lg\\:hidden.fixed * {
+    background-color: transparent !important;
+  }
+  
+  header .lg\\:hidden.fixed > div {
+    background-color: #FFFFFF !important;
+  }
+  
+  header nav a {
+    color: #1f2937 !important; /* gray-800 */
+    font-weight: 600 !important;
+    font-size: 1.25rem !important; /* text-xl */
+    padding: 1rem 1.5rem !important;
+    border-radius: 0.5rem !important; /* rounded-lg */
+    transition: all 0.3s ease !important;
+    border-bottom: 1px solid #e5e7eb !important; /* gray-200 */
+    text-align: right !important;
+    width: 100% !important;
+  }
+  
+  header nav a:hover {
+    background-color: #f9fafb !important; /* gray-50 */
+    color: #0714ea !important; /* primary color */
+  }
+  
+  header nav a:last-child {
+    border-bottom: none !important;
+  }
+  
+  /* WhatsApp button styling */
+  header button[onclick*="handleWhatsAppClick"] {
+    background: #10b981 !important; /* green-500 */
+    color: white !important;
+    width: 100% !important;
+  }
+  
+  header button[onclick*="handleWhatsAppClick"]:hover {
+    background: #059669 !important; /* green-600 */
+  }
+  
+  /* Force solid white background for mobile menu */
+  header .lg\\:hidden.fixed {
+    background-color: #FFFFFF !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+  }
+  
+  /* Ensure all child elements have proper backgrounds */
+  header .lg\\:hidden.fixed nav {
+    background-color: #FFFFFF !important;
   }
 }
 
@@ -104,7 +256,8 @@ body {
   }
 
   .hero-gradient {
-    background: linear-gradient(135deg, #0714ea 0%, #3a3637 100%);
+    /* أزرق احترافي مشابه للشعار */
+    background: linear-gradient(135deg, #0714ea 0%, #0510b8 30%, #030c86 70%, #020854 100%);
   }
 
   .text-gradient {

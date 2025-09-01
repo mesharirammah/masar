@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // WhatsApp SVG Icon Component
 const WhatsAppIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
@@ -37,8 +38,8 @@ const Header: React.FC = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-secondary-100">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-20">
+      <div className="mx-auto px-4 w-full max-w-5xl">
+        <div className="flex items-center justify-between h-12 md:h-14">
           {/* Logo - في اليسار مع زيادة الحجم 40% - متجاوب للهواتف */}
           <div className="flex items-center">
             <div className="header-logo-container">
@@ -53,14 +54,14 @@ const Header: React.FC = () => {
           {/* القائمة - في الوسط */}
           <nav className="hidden lg:flex items-center space-x-8 space-x-reverse">
             {menuItems.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
-                className="text-secondary-700 hover:text-primary-600 font-medium transition-colors duration-300 relative group text-lg"
+                to={item.href}
+                className="text-secondary-700 hover:text-primary-600 font-medium transition-colors duration-300 relative group text-base"
               >
                 {item.name}
                 <span className="absolute bottom-0 right-0 w-0 h-0.5 bg-primary-600 transition-all duration-300 group-hover:w-full"></span>
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -70,8 +71,8 @@ const Header: React.FC = () => {
               onClick={handleWhatsAppClick}
               className="flex items-center space-x-2 space-x-reverse transition-all duration-300 hover:opacity-80 hover:scale-105"
             >
-              <WhatsAppIcon className="w-7 h-7" />
-              <span className="font-semibold text-gray-900 text-lg">+966 50 123 4567</span>
+              <WhatsAppIcon className="w-6 h-6" />
+              <span className="font-semibold text-gray-900 text-base">+966 50 123 4567</span>
             </button>
           </div>
 
@@ -86,25 +87,25 @@ const Header: React.FC = () => {
 
         {/* القائمة للموبايل */}
         {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-secondary-100">
-            <nav className="flex flex-col space-y-4">
+          <div className="lg:hidden py-3 border-t border-secondary-100">
+            <nav className="flex flex-col space-y-4 px-6">
               {menuItems.map((item) => (
-                <a
+                <Link
                   key={item.name}
-                  href={item.href}
+                  to={item.href}
                   className="block text-secondary-700 hover:text-primary-600 font-medium transition-colors duration-300"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
-              <div className="pt-4 border-t border-secondary-100">
+              <div className="pt-3 border-t border-secondary-100">
                 <button
                   onClick={handleWhatsAppClick}
-                  className="w-full flex items-center justify-center space-x-2 space-x-reverse transition-all duration-300 hover:opacity-80 py-3"
+                  className="w-full flex items-center justify-center space-x-2 space-x-reverse transition-all duration-300 hover:opacity-80 py-2"
                 >
-                  <WhatsAppIcon className="w-7 h-7" />
-                  <span className="font-semibold text-gray-900 text-lg">+966 50 123 4567</span>
+                  <WhatsAppIcon className="w-6 h-6" />
+                  <span className="font-semibold text-gray-900 text-base">+966 50 123 4567</span>
                 </button>
               </div>
             </nav>

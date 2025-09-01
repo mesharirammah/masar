@@ -14,9 +14,9 @@ const HeroSection: React.FC = () => {
     <section className="hero-gradient min-h-screen flex items-center relative overflow-hidden pt-16 md:pt-20">
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 left-20 w-72 h-72 bg-[#0714ea]/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-[#0510b8]/15 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#030c86]/10 rounded-full blur-3xl"></div>
       </div>
 
       <div className="container mx-auto px-6 md:px-4 relative z-10">
@@ -32,17 +32,17 @@ const HeroSection: React.FC = () => {
           </p>
 
           {/* الأزرار المحسنة والمكبرة جداً للهواتف */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 md:gap-6 mb-12 md:mb-16 mt-6 md:mt-8 px-4 md:px-0">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5 mb-10 md:mb-14 mt-6 md:mt-8 px-4 md:px-0">
             <button 
               onClick={handleServicesClick}
-              className="bg-blue-800 hover:bg-blue-900 text-white font-bold text-xl md:text-lg px-12 md:px-10 py-6 md:py-5 rounded-xl flex items-center justify-center gap-4 group w-full sm:w-auto transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="bg-[#0714ea] hover:bg-[#0510b8] text-white font-semibold text-lg md:text-base px-8 md:px-6 py-4 md:py-3 rounded-lg flex items-center justify-center gap-3 group w-full sm:w-auto transition-all duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-lg"
             >
               تعرف على الخدمات
-              <ArrowRight className="w-7 h-7 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-6 h-6 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
             </button>
-            <button className="bg-transparent border-2 border-blue-800 text-blue-800 hover:bg-blue-800 hover:text-white font-bold text-xl md:text-lg px-12 md:px-10 py-6 md:py-5 rounded-xl flex items-center justify-center gap-4 group w-full sm:w-auto transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl bg-white/95">
+            <button className="bg-white/95 border-2 border-[#0714ea] text-[#0714ea] hover:bg-[#0714ea] hover:text-white font-semibold text-lg md:text-base px-8 md:px-6 py-4 md:py-3 rounded-lg flex items-center justify-center gap-3 group w-full sm:w-auto transition-all duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-lg">
               الانضمام إلى المجتمع
-              <ArrowRight className="w-7 h-7 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-6 h-6 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
