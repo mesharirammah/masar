@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import SEOHead from './SEOHead';
+import React from 'react';
 import { Send } from 'lucide-react';
+import type { FC, FormEvent, ChangeEvent } from 'react';
+import { submitToGoogleSheet } from '../utils/googleSheetApi';
 
-// نوع البيانات للنموذج
 interface ContactFormData {
   fullName: string;
   email: string;
-  phone?: string;
-  company?: string;
+  phone: string;
+  company: string;
   service: string;
   message: string;
-  timestamp: string;
-  source: string;
 }
 
-const ContactPage = () => {
-  const [formData, setFormData] = useState({
+const ContactPage: FC = () => {
+  const [formData, setFormData] = React.useState<ContactFormData>({
     fullName: '',
     email: '',
     phone: '',
@@ -24,15 +22,11 @@ const ContactPage = () => {
     message: ''
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [submitMessage, setSubmitMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submitStatus, setSubmitStatus] = React.useState<'idle' | 'success' | 'error'>('idle');
+  const [submitMessage, setSubmitMessage] = React.useState('');
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -40,9 +34,8 @@ const ContactPage = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log('Form submission started');
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setSubmitMessage('');
@@ -55,53 +48,13 @@ const ContactPage = () => {
       return;
     }
 
-    const webhookData: ContactFormData = {
-      fullName: formData.fullName,
-      email: formData.email,
-      phone: formData.phone,
-      company: formData.company,
-      service: formData.service,
-      message: formData.message,
-      timestamp: new Date().toISOString(),
-      source: 'contact-form'
-    };
-
-    console.log('📤 إرسال البيانات إلى نموذج التواصل:', webhookData);
-
     try {
-      // إرسال مباشر إلى المسار المحلي /api/contact
-      console.log('📤 إرسال مباشر إلى /api/contact:', webhookData);
+      // استخدام الدالة الجاهزة من googleSheetApi
+      const result = await submitToGoogleSheet(formData);
       
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'User-Agent': 'MasarFlow-ContactForm/1.0'
-        },
-        body: JSON.stringify(webhookData)
-      });
-
-      console.log('📡 استجابة الخادم:', {
-        status: response.status,
-        statusText: response.statusText,
-        ok: response.ok,
-        url: response.url
-      });
-
-      if (response.ok) {
-        let responseData;
-        try {
-          responseData = await response.json();
-        } catch (e) {
-          responseData = { message: 'تم الإرسال بنجاح' };
-        }
-        
-        console.log('✅ تم إرسال النموذج بنجاح إلى Activepieces عبر Netlify Proxy');
-        console.log('📄 بيانات الاستجابة:', responseData);
-        
+      if (result.success) {
         setSubmitStatus('success');
-        setSubmitMessage('شكرًا لك، تم استلام رسالتك بنجاح وإرسالها إلى فريق MasarFlow.');
+        setSubmitMessage('شكرًا لك، تم استلام رسالتك بنجاح. سنتواصل معك قريباً.');
         
         // مسح بيانات النموذج
         setFormData({
@@ -119,27 +72,12 @@ const ContactPage = () => {
           setSubmitMessage('');
         }, 7000);
       } else {
-        // فشل الإرسال
-        const errorText = await response.text();
-        console.error('❌ فشل إرسال النموذج:', {
-          status: response.status,
-          statusText: response.statusText,
-          errorText: errorText
-        });
-        
-        setSubmitStatus('error');
-        setSubmitMessage(`حدث خطأ في الإرسال (${response.status}). يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.`);
-        
-        // إخفاء رسالة الخطأ بعد 8 ثوانِ
-        setTimeout(() => {
-          setSubmitStatus('idle');
-          setSubmitMessage('');
-        }, 8000);
+        throw new Error(result.message);
       }
     } catch (error) {
-      console.error('❌ خطأ في إرسال النموذج:', error);
+      console.error('خطأ في إرسال النموذج:', error);
       setSubmitStatus('error');
-      setSubmitMessage('حدث خطأ في الاتصال. يرجى التحقق من الإنترنت والمحاولة مرة أخرى.');
+      setSubmitMessage('حدث خطأ في الإرسال. يرجى المحاولة مرة أخرى لاحقاً.');
       
       // إخفاء رسالة الخطأ بعد 8 ثوانِ
       setTimeout(() => {
@@ -153,11 +91,6 @@ const ContactPage = () => {
 
   return (
     <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-      <SEOHead 
-        title="اتصل بنا"
-        description="تواصل مع فريق مسار فلو للحصول على استشارة مجانية حول حلول الأتمتة والذكاء الاصطناعي. نحن هنا لمساعدتك في تحقيق التحول الرقمي لأعمالك."
-        keywords="تواصل MasarFlow، استشارة مجانية، خدمة العملاء، دعم تقني، اتصل بنا، مسار فلو"
-      />
       <div className="container mx-auto px-6 pt-32 pb-16">
         {/* Page Header */}
         <div className="text-center mb-20">
@@ -165,7 +98,8 @@ const ContactPage = () => {
             تواصل معنا
           </h1>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-          املأ النموذج أدناه أو تواصل مباشرة عبر البريد أو الهاتف، وسنكون بخدمتك.          </p>
+            املأ النموذج أدناه أو تواصل مباشرة عبر البريد أو الهاتف، وسنكون بخدمتك.
+          </p>
         </div>
 
         {/* Contact Form - Full Width */}
@@ -304,7 +238,7 @@ const ContactPage = () => {
               </button>
             </form>
 
-            {/* Success/Error Message - رسالة النجاح/الخطأ */}
+            {/* Success/Error Message */}
             {submitStatus !== 'idle' && (
               <div className={`mt-6 p-8 rounded-2xl text-center shadow-2xl transform transition-all duration-700 ease-in-out animate-bounce ${
                 submitStatus === 'success' 
@@ -330,146 +264,10 @@ const ContactPage = () => {
                       {submitStatus === 'success' ? '🎉 تم بنجاح!' : '❌ حدث خطأ'}
                     </h3>
                     <p className="font-semibold text-lg leading-relaxed">{submitMessage}</p>
-                    {submitStatus === 'success' && (
-                      <p className="text-sm opacity-90 mt-3">
-                        ✨ تم إرسال بياناتك إلى فريق MasarFlow بنجاح
-                      </p>
-                    )}
                   </div>
                 </div>
               </div>
             )}
-          </div>
-        </div>
-
-        {/* FAQ Section */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-12">
-          <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">الأسئلة الشائعة</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base px-4">
-              إجابات على أكثر الأسئلة شيوعاً حول خدماتنا وعملية التعاون معنا
-            </p>
-          </div>
-
-          <div className="max-w-5xl mx-auto space-y-4 md:space-y-6">
-            {/* FAQ Item 1 */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl md:rounded-2xl p-4 md:p-8 hover:shadow-lg transition-all duration-300 hover:scale-[1.01] md:hover:scale-[1.02]">
-              <div className="flex flex-col md:flex-row md:items-start space-y-3 md:space-y-0 md:space-x-4 md:space-x-reverse">
-                <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-lg md:text-xl font-bold shadow-lg mx-auto md:mx-0">
-                  ❓
-                </div>
-                <div className="flex-1 text-center md:text-right">
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-4 leading-tight">
-                    ما هي الخدمات التي تقدمها MasarFlow؟
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed text-sm md:text-lg">
-                    نحن نوفر حلولاً احترافية تشمل تصميم واجهات المستخدم وتجربة المستخدم (UI/UX)، أتمتة الأعمال باستخدام n8n، تطوير حلول ذكاء اصطناعي، إنشاء أنظمة تسويق مؤتمتة، وتصميم حلول رقمية مخصصة.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* FAQ Item 2 */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100 rounded-xl md:rounded-2xl p-4 md:p-8 hover:shadow-lg transition-all duration-300 hover:scale-[1.01] md:hover:scale-[1.02]">
-              <div className="flex flex-col md:flex-row md:items-start space-y-3 md:space-y-0 md:space-x-4 md:space-x-reverse">
-                <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-lg md:text-xl font-bold shadow-lg mx-auto md:mx-0">
-                  ❓
-                </div>
-                <div className="flex-1 text-center md:text-right">
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-4 leading-tight">
-                    كيف يمكنني البدء في مشروع معكم؟
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed text-sm md:text-lg">
-                    بكل بساطة! املأ نموذج التواصل في هذه الصفحة، أو تواصل معنا عبر البريد أو الهاتف، وسنرتب معك اجتماع مبدئي لفهم احتياجاتك واقتراح أنسب الحلول لك.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* FAQ Item 3 */}
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-100 rounded-xl md:rounded-2xl p-4 md:p-8 hover:shadow-lg transition-all duration-300 hover:scale-[1.01] md:hover:scale-[1.02]">
-              <div className="flex flex-col md:flex-row md:items-start space-y-3 md:space-y-0 md:space-x-4 md:space-x-reverse">
-                <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white text-lg md:text-xl font-bold shadow-lg mx-auto md:mx-0">
-                  ❓
-                </div>
-                <div className="flex-1 text-center md:text-right">
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-4 leading-tight">
-                    هل تقدمون استشارات مجانية؟
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed text-sm md:text-lg">
-                    نعم، أول جلسة استشارية مجانية بالكامل لنعرف أكثر عن مشروعك ونرسم لك مسار العمل الأمثل.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* FAQ Item 4 */}
-            <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-100 rounded-xl md:rounded-2xl p-4 md:p-8 hover:shadow-lg transition-all duration-300 hover:scale-[1.01] md:hover:scale-[1.02]">
-              <div className="flex flex-col md:flex-row md:items-start space-y-3 md:space-y-0 md:space-x-4 md:space-x-reverse">
-                <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center text-white text-lg md:text-xl font-bold shadow-lg mx-auto md:mx-0">
-                  ❓
-                </div>
-                <div className="flex-1 text-center md:text-right">
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-4 leading-tight">
-                    هل يمكن تخصيص الحلول حسب احتياجي؟
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed text-sm md:text-lg">
-                    طبعًا! جميع حلولنا مصممة خصيصًا لتلائم احتياج كل عميل، سواء كنت شركة ناشئة أو مؤسسة كبيرة.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* FAQ Item 5 */}
-            <div className="bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-100 rounded-xl md:rounded-2xl p-4 md:p-8 hover:shadow-lg transition-all duration-300 hover:scale-[1.01] md:hover:scale-[1.02]">
-              <div className="flex flex-col md:flex-row md:items-start space-y-3 md:space-y-0 md:space-x-4 md:space-x-reverse">
-                <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-full flex items-center justify-center text-white text-lg md:text-xl font-bold shadow-lg mx-auto md:mx-0">
-                  ❓
-                </div>
-                <div className="flex-1 text-center md:text-right">
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-4 leading-tight">
-                    كم تستغرق مدة تنفيذ المشاريع؟
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed text-sm md:text-lg">
-                    مدة التنفيذ تختلف حسب نوع المشروع وتعقيده، لكننا دائمًا نضع جدولًا زمنيًا واضحًا لك من البداية.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* FAQ Item 6 */}
-            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-100 rounded-xl md:rounded-2xl p-4 md:p-8 hover:shadow-lg transition-all duration-300 hover:scale-[1.01] md:hover:scale-[1.02]">
-              <div className="flex flex-col md:flex-row md:items-start space-y-3 md:space-y-0 md:space-x-4 md:space-x-reverse">
-                <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-full flex items-center justify-center text-white text-lg md:text-xl font-bold shadow-lg mx-auto md:mx-0">
-                  ❓
-                </div>
-                <div className="flex-1 text-center md:text-right">
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-4 leading-tight">
-                    كيف يمكنني متابعة تقدم المشروع؟
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed text-sm md:text-lg">
-                    نوفر لك لوحة متابعة (Dashboard) خاصة بك، وتحديثات أسبوعية لضمان الشفافية وسير العمل بسلاسة.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* FAQ Item 7 */}
-            <div className="bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-100 rounded-xl md:rounded-2xl p-4 md:p-8 hover:shadow-lg transition-all duration-300 hover:scale-[1.01] md:hover:scale-[1.02]">
-              <div className="flex flex-col md:flex-row md:items-start space-y-3 md:space-y-0 md:space-x-4 md:space-x-reverse">
-                <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-rose-500 to-pink-600 rounded-full flex items-center justify-center text-white text-lg md:text-xl font-bold shadow-lg mx-auto md:mx-0">
-                  ❓
-                </div>
-                <div className="flex-1 text-center md:text-right">
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-4 leading-tight">
-                    هل يمكنني تجربة بعض من خدماتكم قبل الشراء؟
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed text-sm md:text-lg">
-                    بعض خدماتنا تشمل نماذج تجريبية أو نسخ عرض (Demo). تواصل معنا لمعرفة التفاصيل حسب نوع الخدمة التي تهمك.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
